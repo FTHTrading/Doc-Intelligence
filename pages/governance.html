@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Governance — Doc Intelligence Engine</title>
+  <link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <span class="brand">FTH Trading</span>
+    <div class="links">
+      <a href="index.html">Overview</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="security.html">Security</a>
+      <a href="governance.html" class="active">Governance</a>
+      <a href="pilot.html">Pilot</a>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+  <div class="hero">
+    <div class="subtitle">Governance Model</div>
+    <h1>Three-Tier Authorization</h1>
+    <p class="tagline">Every system action is classified, verified, and logged through a tiered governance framework.</p>
+  </div>
+
+  <div class="section">
+    <h2>Tier Architecture</h2>
+    <pre><code>
+  ┌──────────────────────────────────────────────────────┐
+  │  TIER 0 — Automated                                  │
+  │  No human approval required                          │
+  │  Logged to governance ledger automatically            │
+  │                                                      │
+  │  Examples: health checks, fingerprint generation,     │
+  │  CID registration, backup rotation, status queries    │
+  └──────────────────────────────────────────────────────┘
+                          │
+                          ▼
+  ┌──────────────────────────────────────────────────────┐
+  │  TIER 1 — OTP Verified                               │
+  │  Requires one-time password confirmation              │
+  │  Time-limited challenge window                        │
+  │                                                      │
+  │  Examples: document signing, access token issuance,   │
+  │  viewing session creation, export approval            │
+  └──────────────────────────────────────────────────────┘
+                          │
+                          ▼
+  ┌──────────────────────────────────────────────────────┐
+  │  TIER 2 — Manual Approval                            │
+  │  Requires explicit operator authorization             │
+  │  Queued on monitoring dashboard for review            │
+  │                                                      │
+  │  Examples: config changes, new investor onboarding,   │
+  │  governance override, backup restoration, key rotation│
+  └──────────────────────────────────────────────────────┘
+    </code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Tier 0 — Automated Operations</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Operation</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Health Check</td><td>Service readiness verification across all ports</td></tr>
+        <tr><td>Fingerprint Generation</td><td>SHA-256 document hash computation</td></tr>
+        <tr><td>CID Registration</td><td>IPFS content identifier recording</td></tr>
+        <tr><td>Backup Rotation</td><td>Scheduled archive creation and cleanup</td></tr>
+        <tr><td>Status Query</td><td>System state reporting via SCA</td></tr>
+        <tr><td>Ledger Append</td><td>Hash-chain event recording</td></tr>
+        <tr><td>Rate Limit Enforcement</td><td>Automatic request throttling</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Tier 1 — OTP Verified Operations</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Operation</th>
+          <th>Challenge</th>
+          <th>Window</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Document Signing</td><td>6-digit OTP</td><td>5 minutes</td></tr>
+        <tr><td>Access Token Issuance</td><td>6-digit OTP</td><td>5 minutes</td></tr>
+        <tr><td>Viewing Session</td><td>6-digit OTP</td><td>5 minutes</td></tr>
+        <tr><td>Export Approval</td><td>6-digit OTP</td><td>5 minutes</td></tr>
+        <tr><td>Funding Intent Capture</td><td>6-digit OTP</td><td>5 minutes</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Tier 2 — Manual Approval Operations</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Operation</th>
+          <th>Approver</th>
+          <th>Method</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Configuration Change</td><td>System Operator</td><td>Dashboard review</td></tr>
+        <tr><td>New Investor Onboarding</td><td>System Operator</td><td>Manual session creation</td></tr>
+        <tr><td>Governance Override</td><td>System Operator</td><td>Explicit approval with reason</td></tr>
+        <tr><td>Backup Restoration</td><td>System Operator</td><td>CLI with verification</td></tr>
+        <tr><td>Key Rotation</td><td>System Operator</td><td>Scheduled maintenance window</td></tr>
+        <tr><td>Perimeter Rule Change</td><td>System Operator</td><td>Config update + restart</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Governance Ledger</h2>
+    <p>Every governance action is recorded in an append-only hash-chain ledger with the following structure:</p>
+    <pre><code>{
+  "id": "gov-20260101-001",
+  "timestamp": "2026-01-01T00:00:00.000Z",
+  "tier": 1,
+  "action": "sign.session.create",
+  "actor": "operator",
+  "target": "session-abc123",
+  "result": "approved",
+  "otpVerified": true,
+  "previousHash": "sha256:abc...",
+  "hash": "sha256:def..."
+}</code></pre>
+    <p>The ledger is tamper-evident: each entry's hash incorporates the previous entry's hash, creating an unbroken verification chain.</p>
+  </div>
+
+  <div class="section">
+    <h2>DAO Governance Modules</h2>
+    <p>The governance framework is implemented through dedicated TypeScript modules in the <code>governance/</code> directory:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Module</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>daoGovernance.ts</td><td>Core governance rule engine</td></tr>
+        <tr><td>complianceEngine.ts</td><td>Regulatory compliance rules</td></tr>
+        <tr><td>brandStyleEngine.ts</td><td>Brand and formatting standards</td></tr>
+        <tr><td>agreementState.ts</td><td>Agreement lifecycle tracking</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Pilot Configuration</h2>
+    <p>During the pilot phase (1 accredited investor), all investor-facing operations require <strong>Tier 2 manual approval</strong> by default, with the option to relax specific operations to Tier 1 after trust is established. This maximizes security posture during the validation period.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 From The Hart Trading LLC. All rights reserved.</p>
+  </div>
+</footer>
+
+</body>
+</html>

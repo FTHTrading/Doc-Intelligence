@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture — Doc Intelligence Engine</title>
+  <link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <span class="brand">FTH Trading</span>
+    <div class="links">
+      <a href="index.html">Overview</a>
+      <a href="architecture.html" class="active">Architecture</a>
+      <a href="security.html">Security</a>
+      <a href="governance.html">Governance</a>
+      <a href="pilot.html">Pilot</a>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+  <div class="hero">
+    <div class="subtitle">System Architecture</div>
+    <h1>Six-Layer Design</h1>
+    <p class="tagline">Modular, self-contained architecture spanning document processing through perimeter security.</p>
+  </div>
+
+  <div class="section">
+    <h2>Architecture Diagram</h2>
+    <pre><code>
+┌─────────────────────────────────────────────────────────┐
+│                   CLOUDFLARE EDGE                       │
+│              Zero Trust · Rate Limiting                 │
+│              Webhook Validation · Tunnel                │
+└───────────────────────┬─────────────────────────────────┘
+                        │ Encrypted Tunnel
+┌───────────────────────┴─────────────────────────────────┐
+│                  PERIMETER LAYER                        │
+│         tunnelManager · rateLimiter · webhookValidator   │
+│         perimeterLedger · cloudflareConfig               │
+└───────────────────────┬─────────────────────────────────┘
+                        │
+        ┌───────────────┼───────────────┬─────────────────┐
+        │               │               │                 │
+        ▼               ▼               ▼                 ▼
+┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+│   DOCUMENT   │ │   SIGNING    │ │     SDC      │ │   TELECOM    │
+│   ENGINE     │ │   GATEWAY    │ │   VIEWER     │ │     SCA      │
+│   :3001      │ │   :3002      │ │   :3003      │ │   :3004      │
+│              │ │              │ │              │ │              │
+│ Ingest       │ │ Sessions     │ │ Viewer       │ │ Inbound      │
+│ Parse        │ │ Multi-sig    │ │ Tokens       │ │ AI Intent    │
+│ Canonicalize │ │ OTP Engine   │ │ Export Ctrl  │ │ Compliance   │
+│ Transform    │ │ Certificates │ │ Watermark    │ │ Conversation │
+│ Export       │ │ Distribute   │ │ Access Log   │ │ Action       │
+│ Fingerprint  │ │              │ │              │ │ Outbound     │
+└──────┬───────┘ └──────────────┘ └──────────────┘ └──────────────┘
+       │
+       ▼
+┌──────────────────────────────────────────────────────────┐
+│                 SOVEREIGNTY LAYER                        │
+│    IPFS/Kubo · CID Registry · Hash Chain · Signatures   │
+│    QR Generator · Audit Trail · SKU Engine               │
+└──────────────────────────────────────────────────────────┘
+       │
+       ▼
+┌──────────────────────────────────────────────────────────┐
+│              OPERATIONS LAYER  :3005                     │
+│         Monitoring Dashboard · Backup Agent              │
+│         Docker Compose · Health Checks                   │
+└──────────────────────────────────────────────────────────┘
+    </code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Document Processing Pipeline</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Stage</th>
+          <th>Module</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Ingest</td><td>Accept PDF, DOCX, PNG, JPG, HTML, TXT, MD via CLI or API</td></tr>
+        <tr><td>2</td><td>Parse</td><td>Format-specific extraction to canonical JSON</td></tr>
+        <tr><td>3</td><td>Canonicalize</td><td>Deterministic normalization (whitespace, encoding, structure)</td></tr>
+        <tr><td>4</td><td>Transform</td><td>Governance, compliance, and brand transforms applied</td></tr>
+        <tr><td>5</td><td>Export</td><td>Template-based rendering to target format</td></tr>
+        <tr><td>6</td><td>Fingerprint</td><td>SHA-256 hash + metadata fingerprint generation</td></tr>
+        <tr><td>7</td><td>Sign</td><td>Digital signature with ESIGN/UETA certificate</td></tr>
+        <tr><td>8</td><td>Encrypt</td><td>AES-256-GCM encryption for at-rest storage</td></tr>
+        <tr><td>9</td><td>Store</td><td>IPFS push via Kubo with CID registration</td></tr>
+        <tr><td>10</td><td>Anchor</td><td>Hash-chain ledger anchoring with lifecycle tracking</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Module Inventory</h2>
+
+    <h3>Document Engine — 14 Modules</h3>
+    <p>Core processing pipeline: format detection, parsing (PDF, DOCX, HTML, image OCR, text), canonical engine, governance/compliance/brand transforms, template export, and fingerprinting.</p>
+
+    <h3>Sovereignty Layer — 12 Modules</h3>
+    <p>IPFS client, Kubo node management, CID registry, event log, ledger anchor, document fingerprint, signature engine, QR generator, audit trail, SKU engine, lifecycle registry, research/publication OS.</p>
+
+    <h3>Signing Gateway — 5 Modules</h3>
+    <p>Gateway server (:3002), session manager, OTP engine, signature certificate generator, distribution engine.</p>
+
+    <h3>Secure Document Control — 7 Modules</h3>
+    <p>SDC server (:3003), viewer protection engine, access token manager, export policy enforcer, forensic watermark, access ledger, SDC configuration.</p>
+
+    <h3>Sovereign Comms Agent — 6 Modules</h3>
+    <p>SCA server (:3004), inbound router, AI intent engine, action engine, outbound composer, conversation ledger.</p>
+
+    <h3>Perimeter Security — 5 Modules</h3>
+    <p>Tunnel manager, rate limiter, webhook validator, perimeter ledger, Cloudflare configuration.</p>
+  </div>
+
+  <div class="section">
+    <h2>Service Ports</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Port</th>
+          <th>Service</th>
+          <th>Access</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>3001</td><td>Document Engine Portal</td><td>Internal only</td></tr>
+        <tr><td>3002</td><td>Signing Gateway</td><td>Internal only</td></tr>
+        <tr><td>3003</td><td>SDC Viewer</td><td>Internal only</td></tr>
+        <tr><td>3004</td><td>SCA Webhook</td><td>Internal only</td></tr>
+        <tr><td>3005</td><td>Monitoring Dashboard</td><td>Internal only</td></tr>
+        <tr><td>5001</td><td>IPFS / Kubo API</td><td>Internal only</td></tr>
+        <tr><td>8081</td><td>IPFS Gateway</td><td>Internal only</td></tr>
+      </tbody>
+    </table>
+    <p>All ports are internal. External access is exclusively through Cloudflare Zero Trust tunnels.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 From The Hart Trading LLC. All rights reserved.</p>
+  </div>
+</footer>
+
+</body>
+</html>

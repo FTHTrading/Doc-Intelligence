@@ -1,0 +1,314 @@
+/* ============================================
+   FTH Trading — Doc Intelligence Engine
+   GitHub Pages Theme
+   ============================================ */
+
+:root {
+  --navy-deep: #0a0e1a;
+  --navy-mid: #141a2e;
+  --navy-light: #1a1f35;
+  --navy-border: #2a2f45;
+  --gold: #C8A951;
+  --gold-dim: #a08840;
+  --text-primary: #e8e6e3;
+  --text-secondary: #8a8fa3;
+  --text-muted: #5a5f73;
+  --red-alert: #ff4444;
+  --green-ok: #44cc88;
+  --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Courier New', monospace;
+  --sans: 'Inter', 'Segoe UI', -apple-system, Helvetica, Arial, sans-serif;
+  --serif: Georgia, 'Times New Roman', serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--sans);
+  background-color: var(--navy-deep);
+  color: var(--text-primary);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Typography */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  color: var(--text-primary);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+h1 {
+  font-size: 2.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: 0.75rem;
+  display: inline-block;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin: 2.5rem 0 1rem;
+  color: var(--gold);
+}
+
+h3 {
+  font-size: 1.125rem;
+  margin: 1.5rem 0 0.75rem;
+  color: var(--text-secondary);
+}
+
+p {
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+}
+
+a {
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+a:hover {
+  border-bottom-color: var(--gold);
+}
+
+/* Navigation */
+nav {
+  background: var(--navy-mid);
+  border-bottom: 1px solid var(--navy-border);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+nav .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+nav .brand {
+  font-family: var(--serif);
+  font-size: 1.125rem;
+  color: var(--gold);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+nav .links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+nav .links a {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+nav .links a:hover,
+nav .links a.active {
+  color: var(--gold);
+}
+
+/* Hero */
+.hero {
+  padding: 4rem 0 3rem;
+  border-bottom: 1px solid var(--navy-border);
+}
+
+.hero .subtitle {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.hero h1 {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 1rem;
+}
+
+.hero .tagline {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  max-width: 640px;
+}
+
+/* Section */
+.section {
+  padding: 3rem 0;
+  border-bottom: 1px solid var(--navy-border);
+}
+
+.section:last-child {
+  border-bottom: none;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+}
+
+th {
+  background: var(--navy-mid);
+  color: var(--gold);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--navy-border);
+}
+
+td {
+  padding: 0.625rem 1rem;
+  border-bottom: 1px solid var(--navy-border);
+  color: var(--text-secondary);
+}
+
+tr:hover td {
+  background: var(--navy-light);
+}
+
+/* Code */
+code {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  background: var(--navy-light);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  color: var(--gold);
+}
+
+pre {
+  background: var(--navy-mid);
+  border: 1px solid var(--navy-border);
+  border-radius: 6px;
+  padding: 1.25rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+/* Cards */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.card {
+  background: var(--navy-mid);
+  border: 1px solid var(--navy-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.card h3 {
+  margin-top: 0;
+  color: var(--gold);
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.card p {
+  font-size: 0.875rem;
+  margin-bottom: 0;
+}
+
+/* Status Badges */
+.badge {
+  display: inline-block;
+  padding: 0.2em 0.6em;
+  border-radius: 3px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge-operational {
+  background: rgba(68, 204, 136, 0.15);
+  color: var(--green-ok);
+  border: 1px solid rgba(68, 204, 136, 0.3);
+}
+
+.badge-gold {
+  background: rgba(200, 169, 81, 0.15);
+  color: var(--gold);
+  border: 1px solid rgba(200, 169, 81, 0.3);
+}
+
+/* Footer */
+footer {
+  padding: 2rem 0;
+  border-top: 1px solid var(--navy-border);
+  text-align: center;
+}
+
+footer p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  nav .links {
+    gap: 1rem;
+  }
+
+  nav .links a {
+    font-size: 0.75rem;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+}

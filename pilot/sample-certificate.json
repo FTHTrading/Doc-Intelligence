@@ -1,0 +1,52 @@
+{
+  "certificateId": "cert-demo-001",
+  "version": "1.0",
+  "standard": "ESIGN Act (2000) + UETA",
+  "document": {
+    "title": "Structured Finance Offering Memorandum",
+    "fingerprint": "sha256:a4b8c1__REDACTED__f9e2d7",
+    "pages": 44,
+    "format": "application/pdf",
+    "processedAt": "2026-02-24T10:00:00.000Z"
+  },
+  "session": {
+    "sessionId": "DEMO-SESSION-001",
+    "createdAt": "2026-02-24T10:10:00.000Z",
+    "completedAt": "2026-02-24T10:15:32.000Z",
+    "threshold": 2,
+    "status": "COMPLETED"
+  },
+  "signers": [
+    {
+      "position": 1,
+      "role": "Managing Partner",
+      "identity": "[REDACTED]",
+      "otpVerified": true,
+      "otpTimestamp": "2026-02-24T10:12:15.000Z",
+      "signedAt": "2026-02-24T10:13:01.000Z",
+      "signatureHash": "sha256:f2a1b8__REDACTED__c9d4e6"
+    },
+    {
+      "position": 2,
+      "role": "Compliance Officer",
+      "identity": "[REDACTED]",
+      "otpVerified": true,
+      "otpTimestamp": "2026-02-24T10:14:22.000Z",
+      "signedAt": "2026-02-24T10:15:30.000Z",
+      "signatureHash": "sha256:d7c3e9__REDACTED__a1b5f2"
+    }
+  ],
+  "integrity": {
+    "documentHash": "sha256:a4b8c1__REDACTED__f9e2d7",
+    "certificateHash": "sha256:91c7e4__REDACTED__a2b5f8",
+    "chainPosition": 142,
+    "previousHash": "sha256:d8e2f1__REDACTED__b4c7a3",
+    "ledgerAnchor": "sha256:91c7e4__REDACTED__a2b5f8"
+  },
+  "storage": {
+    "ipfsCid": "bafybeig__REDACTED__7xq",
+    "encrypted": true,
+    "algorithm": "AES-256-GCM"
+  },
+  "disclaimer": "SYNTHETIC DATA — This certificate is a demonstration artifact. No real signatures, identities, or document hashes are represented."
+}

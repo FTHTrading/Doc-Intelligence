@@ -1,0 +1,63 @@
+{
+  "snapshotType": "REDACTED_DEMO",
+  "generatedAt": "2026-02-24T12:00:00.000Z",
+  "chainLength": 3,
+  "disclaimer": "All hashes and identifiers are synthetic. This snapshot demonstrates ledger structure only.",
+  "entries": [
+    {
+      "id": "ledger-demo-001",
+      "timestamp": "2026-02-24T09:00:00.000Z",
+      "type": "DOCUMENT_INGESTED",
+      "action": "ingest.pdf",
+      "actor": "system",
+      "target": "structured-finance-memo.pdf",
+      "metadata": {
+        "format": "application/pdf",
+        "size": 2890752,
+        "pages": 42
+      },
+      "previousHash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "hash": "sha256:b7c9d2__REDACTED__e4f1a8"
+    },
+    {
+      "id": "ledger-demo-002",
+      "timestamp": "2026-02-24T10:00:00.000Z",
+      "type": "DOCUMENT_PROCESSED",
+      "action": "pipeline.complete",
+      "actor": "system",
+      "target": "structured-finance-memo.pdf",
+      "metadata": {
+        "fingerprint": "sha256:a4b8c1__REDACTED__f9e2d7",
+        "transforms": ["governance", "compliance", "brand"],
+        "outputPages": 44,
+        "deterministic": true,
+        "hashVerifications": 3
+      },
+      "previousHash": "sha256:b7c9d2__REDACTED__e4f1a8",
+      "hash": "sha256:e3f1a8__REDACTED__c4d6b2"
+    },
+    {
+      "id": "ledger-demo-003",
+      "timestamp": "2026-02-24T10:15:32.000Z",
+      "type": "SIGNING_COMPLETED",
+      "action": "sign.session.complete",
+      "actor": "operator",
+      "target": "DEMO-SESSION-001",
+      "metadata": {
+        "signers": 2,
+        "threshold": 2,
+        "otpVerified": true,
+        "certificateId": "cert-demo-001",
+        "standard": "ESIGN/UETA",
+        "ipfsCid": "bafybeig__REDACTED__7xq"
+      },
+      "previousHash": "sha256:e3f1a8__REDACTED__c4d6b2",
+      "hash": "sha256:91c7e4__REDACTED__a2b5f8"
+    }
+  ],
+  "chainIntegrity": {
+    "verified": true,
+    "method": "SHA-256 sequential hash chain",
+    "note": "Each entry hash incorporates the previous entry hash, creating tamper-evident linkage"
+  }
+}

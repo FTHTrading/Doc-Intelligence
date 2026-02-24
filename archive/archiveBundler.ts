@@ -1,0 +1,299 @@
+// ─────────────────────────────────────────────────────────────
+// Archive Bundler — Package outputs into a self-contained archive
+// ─────────────────────────────────────────────────────────────
+
+import fs from "fs";
+import path from "path";
+import crypto from "crypto";
+import { DocumentObject } from "../schema/documentSchema";
+import { generateFingerprint } from "../export/jsonExport";
+
+export interface ArchiveManifest {
+  engine: string;
+  version: string;
+  created: string;
+  sourceFile: string;
+  documentTitle: string;
+  fingerprint: {
+    sha256: string;
+    merkleRoot: string;
+  };
+  files: {
+    name: string;
+    path: string;
+    size: number;
+    sha256: string;
+    type: string;
+  }[];
+  totalSize: number;
+}
+
+/**
+ * Create an archive manifest for all files in the output directory.
+ * The manifest provides integrity verification for every file in the archive.
+ */
+export function buildArchiveManifest(
+  doc: DocumentObject,
+  sourceFile: string,
+  outputDir: string
+): ArchiveManifest {
+  const sourceBuffer = fs.existsSync(sourceFile)
+    ? fs.readFileSync(sourceFile)
+    : Buffer.from("");
+  const fingerprint = generateFingerprint(doc, sourceBuffer);
+
+  const files: ArchiveManifest["files"] = [];
+  let totalSize = 0;
+
+  if (fs.existsSync(outputDir)) {
+    const entries = fs.readdirSync(outputDir);
+    for (const entry of entries) {
+      const fullPath = path.join(outputDir, entry);
+      const stat = fs.statSync(fullPath);
+      if (!stat.isFile()) continue;
+
+      const buffer = fs.readFileSync(fullPath);
+      const hash = crypto.createHash("sha256").update(buffer).digest("hex");
+      const ext = path.extname(entry);
+
+      files.push({
+        name: entry,
+        path: entry,
+        size: stat.size,
+        sha256: hash,
+        type: getFileType(ext),
+      });
+
+      totalSize += stat.size;
+    }
+  }
+
+  return {
+    engine: "Document Intelligence Engine",
+    version: "1.0.0",
+    created: new Date().toISOString(),
+    sourceFile: path.basename(sourceFile),
+    documentTitle: doc.metadata.title,
+    fingerprint: {
+      sha256: fingerprint.sha256,
+      merkleRoot: fingerprint.merkleRoot,
+    },
+    files,
+    totalSize,
+  };
+}
+
+/**
+ * Write the archive manifest and a verification script.
+ */
+export async function createArchive(
+  doc: DocumentObject,
+  sourceFile: string,
+  outputDir: string
+): Promise<string> {
+  const manifest = buildArchiveManifest(doc, sourceFile, outputDir);
+
+  // Write manifest
+  const manifestPath = path.join(outputDir, "archive-manifest.json");
+  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+  console.log(`[ARCHIVE] Manifest → ${manifestPath}`);
+
+  // Write verification script
+  const verifyScript = generateVerifyScript(manifest);
+  const verifyPath = path.join(outputDir, "verify-archive.js");
+  fs.writeFileSync(verifyPath, verifyScript);
+  console.log(`[ARCHIVE] Verify script → ${verifyPath}`);
+
+  // Write summary report
+  const reportPath = path.join(outputDir, "archive-report.html");
+  fs.writeFileSync(reportPath, generateArchiveReport(manifest));
+  console.log(`[ARCHIVE] Report → ${reportPath}`);
+
+  return manifestPath;
+}
+
+/**
+ * Verify every file in an archive against its manifest.
+ */
+export function verifyArchive(outputDir: string): {
+  valid: boolean;
+  checked: number;
+  errors: string[];
+} {
+  const manifestPath = path.join(outputDir, "archive-manifest.json");
+  if (!fs.existsSync(manifestPath)) {
+    return { valid: false, checked: 0, errors: ["archive-manifest.json not found"] };
+  }
+
+  const manifest: ArchiveManifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
+  const errors: string[] = [];
+  let checked = 0;
+
+  for (const file of manifest.files) {
+    if (file.name === "archive-manifest.json" || file.name === "verify-archive.js") continue;
+
+    const filePath = path.join(outputDir, file.path);
+    if (!fs.existsSync(filePath)) {
+      errors.push(`Missing: ${file.name}`);
+      continue;
+    }
+
+    const buffer = fs.readFileSync(filePath);
+    const hash = crypto.createHash("sha256").update(buffer).digest("hex");
+
+    if (hash !== file.sha256) {
+      errors.push(`Tampered: ${file.name} (expected ${file.sha256.substring(0, 12)}..., got ${hash.substring(0, 12)}...)`);
+    }
+
+    checked++;
+  }
+
+  return {
+    valid: errors.length === 0,
+    checked,
+    errors,
+  };
+}
+
+function getFileType(ext: string): string {
+  const types: Record<string, string> = {
+    ".html": "template",
+    ".css": "stylesheet",
+    ".json": "data",
+    ".pdf": "document",
+    ".xml": "document",
+    ".png": "image",
+    ".jpg": "image",
+    ".txt": "text",
+  };
+  return types[ext] || "other";
+}
+
+function generateVerifyScript(manifest: ArchiveManifest): string {
+  return `#!/usr/bin/env node
+// ─────────────────────────────────────────────────────────────
+// Archive Verification Script
+// Generated by Document Intelligence Engine
+// ─────────────────────────────────────────────────────────────
+//
+// Usage: node verify-archive.js
+//
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+
+const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, "archive-manifest.json"), "utf-8"));
+
+console.log("\\nDocument Intelligence Engine — Archive Verification");
+console.log("=" .repeat(55));
+console.log("Document: " + manifest.documentTitle);
+console.log("Created:  " + manifest.created);
+console.log("SHA-256:  " + manifest.fingerprint.sha256.substring(0, 32) + "...");
+console.log("Merkle:   " + manifest.fingerprint.merkleRoot.substring(0, 32) + "...");
+console.log("");
+
+let passed = 0;
+let failed = 0;
+
+for (const file of manifest.files) {
+  if (file.name === "archive-manifest.json" || file.name === "verify-archive.js" || file.name === "archive-report.html") continue;
+  const filePath = path.join(__dirname, file.path);
+  if (!fs.existsSync(filePath)) {
+    console.log("  MISSING  " + file.name);
+    failed++;
+    continue;
+  }
+  const buffer = fs.readFileSync(filePath);
+  const hash = crypto.createHash("sha256").update(buffer).digest("hex");
+  if (hash === file.sha256) {
+    console.log("  OK       " + file.name);
+    passed++;
+  } else {
+    console.log("  FAIL     " + file.name);
+    failed++;
+  }
+}
+
+console.log("");
+console.log("Passed: " + passed + " / Failed: " + failed);
+console.log(failed === 0 ? "Archive integrity: VALID" : "Archive integrity: COMPROMISED");
+console.log("");
+`;
+}
+
+function generateArchiveReport(manifest: ArchiveManifest): string {
+  const fileRows = manifest.files
+    .map(
+      (f) => `
+    <tr>
+      <td>${f.name}</td>
+      <td>${f.type}</td>
+      <td>${formatSize(f.size)}</td>
+      <td><code>${f.sha256.substring(0, 16)}...</code></td>
+    </tr>`
+    )
+    .join("");
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Archive Report — ${manifest.documentTitle}</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; color: #2c3e50; }
+    h1 { color: #1B2A4A; border-bottom: 3px solid #C0392B; padding-bottom: 12px; }
+    .meta { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; margin: 20px 0; }
+    .meta dt { font-weight: 700; color: #7f8c8d; font-size: 0.85rem; text-transform: uppercase; margin-top: 12px; }
+    .meta dd { margin: 4px 0 0 0; font-size: 1rem; }
+    .meta dd code { background: #eef; padding: 2px 6px; border-radius: 3px; font-size: 0.9rem; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    th { background: #1B2A4A; color: white; padding: 10px 12px; text-align: left; font-size: 0.85rem; text-transform: uppercase; }
+    td { padding: 10px 12px; border-bottom: 1px solid #e0e0e0; font-size: 0.9rem; }
+    tr:hover td { background: #f0f4f8; }
+    code { font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 0.85rem; }
+    footer { text-align: center; color: #95a5a6; margin-top: 40px; padding: 20px; border-top: 1px solid #e0e0e0; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <h1>Archive Report</h1>
+
+  <dl class="meta">
+    <dt>Document</dt>
+    <dd>${manifest.documentTitle}</dd>
+    <dt>Source File</dt>
+    <dd>${manifest.sourceFile}</dd>
+    <dt>Created</dt>
+    <dd>${manifest.created}</dd>
+    <dt>SHA-256 Fingerprint</dt>
+    <dd><code>${manifest.fingerprint.sha256}</code></dd>
+    <dt>Merkle Root</dt>
+    <dd><code>${manifest.fingerprint.merkleRoot}</code></dd>
+    <dt>Total Size</dt>
+    <dd>${formatSize(manifest.totalSize)}</dd>
+    <dt>Files</dt>
+    <dd>${manifest.files.length}</dd>
+  </dl>
+
+  <h2>File Inventory</h2>
+  <table>
+    <thead>
+      <tr><th>File</th><th>Type</th><th>Size</th><th>SHA-256</th></tr>
+    </thead>
+    <tbody>
+      ${fileRows}
+    </tbody>
+  </table>
+
+  <footer>
+    ${manifest.engine} v${manifest.version} — Generated ${manifest.created}
+  </footer>
+</body>
+</html>`;
+}
+
+function formatSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}

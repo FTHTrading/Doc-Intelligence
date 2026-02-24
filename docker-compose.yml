@@ -1,0 +1,169 @@
+# ─────────────────────────────────────────────────────────────
+# FTH Sovereign Infrastructure — Docker Compose
+#
+# Services:
+#   fth-engine     — Document Intelligence Engine (Node.js)
+#   ipfs-kubo      — IPFS Node (content-addressed storage)
+#   cloudflared    — Cloudflare Tunnel (zero-port ingress)
+#
+# Volumes:
+#   fth-data       — Ledgers, vaults, signing sessions
+#   fth-backups    — Encrypted backup snapshots
+#   ipfs-data      — IPFS block storage
+#
+# Networks:
+#   fth-internal   — Internal service mesh (no external access)
+#
+# Usage:
+#   docker compose up -d
+#   docker compose logs -f fth-engine
+#   docker compose exec fth-engine node dist/app.js --perimeter-status
+# ─────────────────────────────────────────────────────────────
+
+version: "3.9"
+
+networks:
+  fth-internal:
+    driver: bridge
+    internal: true  # No external access — all ingress via cloudflared
+  fth-tunnel:
+    driver: bridge   # cloudflared needs external access
+
+volumes:
+  fth-data:
+    driver: local
+  fth-backups:
+    driver: local
+  ipfs-data:
+    driver: local
+  ipfs-staging:
+    driver: local
+
+services:
+  # ── FTH Document Intelligence Engine ────────────────────────
+  fth-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fth-engine
+    restart: unless-stopped
+    networks:
+      - fth-internal
+    ports: []  # NO exposed ports — all traffic via cloudflared tunnel
+    volumes:
+      - fth-data:/app/.doc-engine
+      - fth-backups:/app/backups
+      - ./input:/app/input:ro        # Read-only document input
+      - ./output:/app/output         # Processed output
+    environment:
+      - NODE_ENV=production
+      - TELNYX_API_KEY=${TELNYX_API_KEY:-}
+      - TELNYX_WEBHOOK_SECRET=${TELNYX_WEBHOOK_SECRET:-}
+      - TELNYX_MESSAGING_PROFILE=${TELNYX_MESSAGING_PROFILE:-}
+      - FTH_BACKUP_INTERVAL_MINUTES=${FTH_BACKUP_INTERVAL_MINUTES:-15}
+      - FTH_BACKUP_ENCRYPTION_KEY=${FTH_BACKUP_ENCRYPTION_KEY:-}
+      - IPFS_API_URL=http://ipfs-kubo:5001
+      - IPFS_GATEWAY_URL=http://ipfs-kubo:8080
+    # Run all 4 services: portal (3001), gateway (3002), viewer (3003), webhook (3004)
+    command: >
+      node dist/app.js
+      --portal --portal-port 3001
+      --gateway --gateway-port 3002
+      --sdc-viewer --sdc-viewer-port 3003
+      --sca-webhook --sca-webhook-port 3004
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    depends_on:
+      ipfs-kubo:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "2.0"
+        reservations:
+          memory: 512M
+          cpus: "0.5"
+
+  # ── IPFS Kubo Node ──────────────────────────────────────────
+  ipfs-kubo:
+    image: ipfs/kubo:v0.33.2
+    container_name: fth-ipfs
+    restart: unless-stopped
+    networks:
+      - fth-internal
+    ports: []  # No external ports — internal only
+    volumes:
+      - ipfs-data:/data/ipfs
+      - ipfs-staging:/export
+    environment:
+      - IPFS_PROFILE=server
+      - IPFS_SWARM_KEY=${IPFS_SWARM_KEY:-}
+    healthcheck:
+      test: ["CMD", "ipfs", "id"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: "1.0"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+
+  # ── Cloudflare Tunnel ───────────────────────────────────────
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: fth-tunnel
+    restart: unless-stopped
+    networks:
+      - fth-internal
+      - fth-tunnel    # Needs external access to reach Cloudflare edge
+    command: >
+      tunnel --no-autoupdate run
+      --token ${CLOUDFLARE_TUNNEL_TOKEN}
+    environment:
+      - TUNNEL_METRICS=0.0.0.0:2000
+    depends_on:
+      fth-engine:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.5"
+        reservations:
+          memory: 64M
+          cpus: "0.1"
+
+  # ── Backup Agent ────────────────────────────────────────────
+  # Runs periodic encrypted ledger snapshots
+  fth-backup:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fth-backup
+    restart: unless-stopped
+    networks:
+      - fth-internal
+    volumes:
+      - fth-data:/app/.doc-engine:ro   # Read-only access to ledgers
+      - fth-backups:/app/backups       # Write backup snapshots
+    environment:
+      - NODE_ENV=production
+      - FTH_BACKUP_INTERVAL_MINUTES=${FTH_BACKUP_INTERVAL_MINUTES:-15}
+      - FTH_BACKUP_ENCRYPTION_KEY=${FTH_BACKUP_ENCRYPTION_KEY:-}
+      - FTH_BACKUP_RETENTION_DAYS=${FTH_BACKUP_RETENTION_DAYS:-30}
+    command: node dist/app.js --backup-daemon
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.5"

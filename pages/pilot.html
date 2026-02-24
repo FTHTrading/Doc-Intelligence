@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pilot — Doc Intelligence Engine</title>
+  <link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <span class="brand">FTH Trading</span>
+    <div class="links">
+      <a href="index.html">Overview</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="security.html">Security</a>
+      <a href="governance.html">Governance</a>
+      <a href="pilot.html" class="active">Pilot</a>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+  <div class="hero">
+    <div class="subtitle">Pilot Configuration</div>
+    <h1>Controlled Launch</h1>
+    <p class="tagline">Maximum security discipline. Single accredited investor. Full operational verification before scale.</p>
+  </div>
+
+  <div class="section">
+    <h2>Pilot Parameters</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Parameter</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Investor Count</td><td>1</td></tr>
+        <tr><td>Investor Type</td><td>Accredited HNW — Trusted Allocator</td></tr>
+        <tr><td>Access Method</td><td>Cloudflare Zero Trust tunnel (private link)</td></tr>
+        <tr><td>Authentication</td><td>OTP per signing session</td></tr>
+        <tr><td>Governance Mode</td><td>Tier 2 default (manual approval)</td></tr>
+        <tr><td>Backup Schedule</td><td>Daily encrypted rotation</td></tr>
+        <tr><td>Monitoring</td><td>Continuous on port 3005</td></tr>
+        <tr><td>Exposed Ports</td><td>0 (all tunneled)</td></tr>
+        <tr><td>Document Formats</td><td>PDF, DOCX (pilot scope)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Investor Experience Flow</h2>
+    <pre><code>
+  Operator creates session
+         │
+         ▼
+  Secure link generated
+  (Cloudflare tunnel URL)
+         │
+         ▼
+  Investor receives link
+  (encrypted channel)
+         │
+         ▼
+  Zero Trust verification
+  at Cloudflare edge
+         │
+         ▼
+  OTP challenge issued
+  (6-digit, 5-min window)
+         │
+         ▼
+  Document presented
+  in SDC viewer
+  (no copy/print/download)
+         │
+         ▼
+  Signing ceremony
+  (OTP-verified, multi-sig)
+         │
+         ▼
+  Certificate generated
+  (ESIGN/UETA compliant)
+         │
+         ▼
+  Funding intent captured
+  (ledger-anchored)
+    </code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Security Posture</h2>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Network Isolation</h3>
+        <p>Zero exposed ports. All traffic routes through Cloudflare Zero Trust. No direct IP access to any service.</p>
+      </div>
+      <div class="card">
+        <h3>Document Control</h3>
+        <p>SDC viewer prevents copy, print, download, and screenshot. Forensic watermarking enables leak traceability. Time-limited access tokens.</p>
+      </div>
+      <div class="card">
+        <h3>Cryptographic Integrity</h3>
+        <p>Every document is fingerprinted (SHA-256), signed, encrypted (AES-256-GCM), and anchored to a hash-chain ledger. Deterministic processing ensures reproducibility.</p>
+      </div>
+      <div class="card">
+        <h3>Operational Discipline</h3>
+        <p>Daily encrypted backups. Continuous health monitoring. All events logged to immutable ledgers. Manual approval required for all investor-facing operations.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Pre-Invite Checklist</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Item</th>
+          <th>Verification</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Docker Compose stack running</td><td>All 4 services healthy</td></tr>
+        <tr><td>2</td><td>IPFS/Kubo node connected</td><td>Peer count > 0</td></tr>
+        <tr><td>3</td><td>Cloudflare tunnel active</td><td>Tunnel status: healthy</td></tr>
+        <tr><td>4</td><td>Zero Trust policy configured</td><td>Access restricted to invited identity</td></tr>
+        <tr><td>5</td><td>Test document processed</td><td>Full pipeline: ingest → sign → IPFS</td></tr>
+        <tr><td>6</td><td>Backup chain verified</td><td>Restore test passed</td></tr>
+        <tr><td>7</td><td>Monitoring dashboard live</td><td>Port 3005 responding</td></tr>
+        <tr><td>8</td><td>Governance ledger initialized</td><td>Genesis entry present</td></tr>
+        <tr><td>9</td><td>OTP delivery tested</td><td>Code received within 30 seconds</td></tr>
+        <tr><td>10</td><td>SDC viewer tested</td><td>Copy/print/download blocked</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Scaling Plan</h2>
+    <p>After successful pilot validation with the initial investor, the system is designed for controlled expansion:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Phase</th>
+          <th>Scope</th>
+          <th>Requirements</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Pilot</td><td>1 accredited investor</td><td>Full manual approval, maximum security</td></tr>
+        <tr><td>Limited</td><td>3–5 investors</td><td>Per-investor session isolation, concurrent signing</td></tr>
+        <tr><td>Growth</td><td>10–25 investors</td><td>Queue management, automated Tier 1 operations</td></tr>
+        <tr><td>Scale</td><td>25+ investors</td><td>Multi-node IPFS, load balancing, dedicated backup infrastructure</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Investor Posture</h2>
+    <p>The pilot is configured for a <strong>Trusted Allocator</strong> — a relationship-stage investor where operational friction is acceptable and expected. The system presents as infrastructure, not a sales deck. Every security measure is visible and intentional.</p>
+    <p>The system itself is the product demonstration. The investor sees sovereign infrastructure, not marketing.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 From The Hart Trading LLC. All rights reserved.</p>
+    <p style="margin-top: 0.5rem;">This system is proprietary infrastructure. Not a securities offering.</p>
+  </div>
+</footer>
+
+</body>
+</html>

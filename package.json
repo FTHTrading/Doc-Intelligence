@@ -1,0 +1,37 @@
+{
+  "name": "doc-intelligence-engine",
+  "version": "1.0.0",
+  "description": "Universal Document Intelligence + DAO Template Engine — Ingest any document, extract structure, output clean reusable templates with governance and compliance layers.",
+  "main": "dist/app.js",
+  "scripts": {
+    "start": "ts-node app.ts",
+    "build": "tsc",
+    "dev": "ts-node app.ts",
+    "template": "ts-node app.ts --mode template",
+    "governance": "ts-node app.ts --mode governance",
+    "compliance": "ts-node app.ts --mode compliance",
+    "brand": "ts-node app.ts --mode brand --brand fth",
+    "help": "ts-node app.ts --help",
+    "test:determinism": "ts-node test/determinism.test.ts",
+    "test": "npm run test:determinism"
+  },
+  "keywords": ["document-intelligence", "template-engine", "dao-governance", "compliance", "blockchain-anchor"],
+  "author": "From The Hart",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "cheerio": "^1.2.0",
+    "crypto-js": "^4.2.0",
+    "mammoth": "^1.11.0",
+    "pdf-parse": "^2.4.5",
+    "puppeteer": "^24.37.5",
+    "sharp": "^0.34.5",
+    "tesseract.js": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "@types/node": "^25.3.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

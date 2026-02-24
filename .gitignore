@@ -1,0 +1,61 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Engine working directories
+input/
+output/
+.doc-engine/
+
+# Sovereign data (local only)
+sovereign-data/
+backups/
+*.backup
+
+# Signing and ledger state
+signing-sessions.json
+ledger-anchors.json
+
+# Environment and secrets
+.env
+.env.local
+.env.production
+*.key
+*.pem
+*.cert
+
+# Cloudflare tunnel credentials
+cloudflared/
+tunnel-config/
+*.cloudflared
+
+# IPFS node data
+ipfs-data/
+
+# Telnyx / API keys (never commit)
+telnyx-*.json
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Temporary files
+tmp/
+temp/

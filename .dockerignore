@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+
+# Build output
+dist/
+
+# Data (mounted as volumes, not baked into image)
+.doc-engine/
+backups/
+
+# Input/output documents
+input/
+output/
+
+# IDE
+.vscode/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Git
+.git/
+.gitignore
+
+# Development files
+*.md
+LICENSE

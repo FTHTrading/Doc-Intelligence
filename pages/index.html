@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doc Intelligence Engine — FTH Trading</title>
+  <link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <span class="brand">FTH Trading</span>
+    <div class="links">
+      <a href="index.html" class="active">Overview</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="security.html">Security</a>
+      <a href="governance.html">Governance</a>
+      <a href="pilot.html">Pilot</a>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+  <div class="hero">
+    <div class="subtitle">From The Hart Trading LLC</div>
+    <h1>Doc Intelligence Engine</h1>
+    <p class="tagline">Sovereign document infrastructure for institutional capital formation. Deterministic processing, cryptographic integrity, zero-trust delivery.</p>
+  </div>
+
+  <div class="section">
+    <h2>System Overview</h2>
+    <p>Doc Intelligence Engine is a self-hosted, sovereign document processing and delivery platform built for regulated capital operations. Every document is canonicalized, fingerprinted, signed, encrypted, and anchored to an immutable ledger — with full auditability at every stage.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <h3>Document Engine</h3>
+        <p>Ingest 7 formats (PDF, DOCX, PNG, JPG, HTML, TXT, MD). Canonical parsing, governance transforms, compliance injection, brand styling, template export.</p>
+      </div>
+      <div class="card">
+        <h3>Sovereignty Layer</h3>
+        <p>IPFS/Kubo storage, CID registry, hash-chain ledger anchoring, document fingerprinting, digital signatures, QR code generation.</p>
+      </div>
+      <div class="card">
+        <h3>Signing Gateway</h3>
+        <p>Multi-signature ceremonies with OTP verification, ESIGN/UETA compliant certificates, session management, distribution engine.</p>
+      </div>
+      <div class="card">
+        <h3>Secure Document Control</h3>
+        <p>Viewer protection with copy/print/download disabling, time-limited access tokens, forensic watermarking, export policy enforcement.</p>
+      </div>
+      <div class="card">
+        <h3>Sovereign Comms Agent</h3>
+        <p>AI-powered telecom layer for investor communications. Intent classification, TCPA compliance, conversation ledger, Telnyx integration.</p>
+      </div>
+      <div class="card">
+        <h3>Perimeter Security</h3>
+        <p>Cloudflare Zero Trust tunnels, rate limiting, webhook HMAC validation, replay attack prevention, IP allowlisting.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Module Status</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Layer</th>
+          <th>Module Count</th>
+          <th>Port</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Infrastructure &amp; Sovereignty</td>
+          <td>12</td>
+          <td>3001</td>
+          <td><span class="badge badge-operational">Operational</span></td>
+        </tr>
+        <tr>
+          <td>Document Engine</td>
+          <td>14</td>
+          <td>3001</td>
+          <td><span class="badge badge-operational">Operational</span></td>
+        </tr>
+        <tr>
+          <td>Signing Gateway</td>
+          <td>5</td>
+          <td>3002</td>
+          <td><span class="badge badge-operational">Operational</span></td>
+        </tr>
+        <tr>
+          <td>Secure Document Control</td>
+          <td>7</td>
+          <td>3003</td>
+          <td><span class="badge badge-operational">Operational</span></td>
+        </tr>
+        <tr>
+          <td>Sovereign Comms Agent</td>
+          <td>6</td>
+          <td>3004</td>
+          <td><span class="badge badge-operational">Operational</span></td>
+        </tr>
+        <tr>
+          <td>Perimeter Security</td>
+          <td>5</td>
+          <td>—</td>
+          <td><span class="badge badge-operational">Operational</span></td>
+        </tr>
+        <tr>
+          <td>Backup &amp; Monitoring</td>
+          <td>2</td>
+          <td>3005</td>
+          <td><span class="badge badge-operational">Operational</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Technology Stack</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Technology</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Language</td><td>TypeScript (ES2020, strict mode)</td></tr>
+        <tr><td>Runtime</td><td>Node.js</td></tr>
+        <tr><td>Storage</td><td>IPFS / Kubo</td></tr>
+        <tr><td>Containerization</td><td>Docker Compose 3.9</td></tr>
+        <tr><td>Perimeter</td><td>Cloudflare Zero Trust + Argo Tunnels</td></tr>
+        <tr><td>Telecom</td><td>Telnyx</td></tr>
+        <tr><td>Cryptography</td><td>AES-256-GCM, SHA-256, PBKDF2</td></tr>
+        <tr><td>Compliance</td><td>ESIGN Act, UETA, SEC 17a-4</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Documentation</h2>
+    <p>Full documentation is available in the <a href="https://github.com/FTHTrading/Doc-Intelligence">GitHub repository</a>.</p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Architecture</h3>
+        <p><a href="architecture.html">System architecture</a>, module inventory, data flow diagrams, and technology stack details.</p>
+      </div>
+      <div class="card">
+        <h3>Security</h3>
+        <p><a href="security.html">Security model</a> covering network, application, cryptographic, and operational layers.</p>
+      </div>
+      <div class="card">
+        <h3>Governance</h3>
+        <p><a href="governance.html">Three-tier governance model</a> with automated, OTP-verified, and manual approval workflows.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 From The Hart Trading LLC. All rights reserved.</p>
+    <p style="margin-top: 0.5rem;">This system is proprietary infrastructure. Not a securities offering.</p>
+  </div>
+</footer>
+
+</body>
+</html>
